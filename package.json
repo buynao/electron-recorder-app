@@ -1,49 +1,71 @@
 {
-  "name": "iep-front",
+  "name": "electron-recorder-app",
+  "description": "electron based recording program, Solved the webm duration problem。",
   "version": "1.0.0",
-  "description": "iep front page",
-  "main": "index.js",
-  "scripts": {
-    "start": "rm -rf ./dist/ && parcel ./public/index.html",
-    "build": "rm -rf ./dist/ && parcel build --no-source-maps --no-cache ./public/index.html && node postOss.js"
-  },
-  "keywords": [
-    "Ant Design",
-    "Parcel",
-    "Tsx"
-  ],
-  "author": "afc163<afc163@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-react": "^7.10.1",
-    "@types/axios": "^0.14.0",
-    "@types/node": "^15.6.0",
-    "@types/react": "^17.0.4",
-    "@types/react-alert": "^5.2.0",
-    "@types/react-dom": "^17.0.3",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.9",
-    "ali-oss": "^6.15.2",
-    "babel-plugin-import": "^1.13.0"
+  "engines": {
+    "node": ">=14.13.0"
+  },
+  "main": "app/index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development elecrun --vite",
+    "preview": "yarn build && cross-env NODE_ENV=production electron ./app/",
+    "build": "elecrun build && vite build",
+    "clean": "elecrun clean",
+    "pack": "yarn run build && yarn run rebuild && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -c ./electron-builder.yml --win --linux",
+    "pack:all": "yarn run build && yarn run rebuild && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -c ./electron-builder.yml --win --linux --mac",
+    "pack:win": "yarn run build && yarn run rebuild && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -c ./electron-builder.yml --win --x64",
+    "pack:mac": "yarn run build && yarn run rebuild && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -c ./electron-builder.yml --mac",
+    "pack:linux": "yarn run build && yarn run rebuild && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -c ./electron-builder.yml --linux",
+    "rebuild": "electron-rebuild -m ./app",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "ali-react-table": "^2.5.1",
-    "axios": "^0.19.2",
-    "classnames": "^2.2.6",
-    "js-base64": "^3.6.0",
-    "less": "^3.11.3",
-    "parcel-bundler": "^1.12.5",
-    "parcel-plugin-bundle-visualiser": "^1.2.0",
+    "@electron/remote": "^2.0.1",
+    "antd": "^4.17.4",
+    "less": "2.7.2",
+    "loudness": "^0.4.1",
     "react": "^17.0.2",
-    "react-alert": "^7.0.3",
-    "react-alert-template-basic": "^1.0.2",
     "react-dom": "^17.0.2",
-    "react-redux": "^7.2.4",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "styled-components": "^5.3.0",
-    "typescript": "^3.9.5"
+    "webm-duration-fix": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
+    "cross-env": "^7.0.3",
+    "electron": "15.3.0",
+    "electron-builder": "^22.14.5",
+    "electron-rebuild": "^2.3.5",
+    "electron-reload": "^1.5.0",
+    "electron-run": "^2.2.0",
+    "electron-search-devtools": "^1.5.1",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.7",
+    "vite-plugin-imp": "^2.0.11",
+    "vite-plugin-style-import": "^1.4.0"
+  },
+  "build": {
+    "productName": "electron-recorder-app",
+    "copyright": "electron-recorder-app©2022",
+    "appId": "fulong.id",
+    "asar": false,
+    "directories": {
+      "output": "realese"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true,
+      "shortcutName": "electron-recorder-app"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "category": "electron.recorder.app"
+    }
   }
 }

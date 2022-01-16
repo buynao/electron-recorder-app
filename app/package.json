@@ -1,0 +1,15 @@
+{
+  "name": "electron-recorder-app",
+  "description": "An Electron boilerplate with hot reloading for React and TypeScript.",
+  "version": "1.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.13.0"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@electron/remote": "^2.0.1",
+    "loudness": "^0.4.1",
+    "webm-duration-fix": "^1.0.1"
+  }
+}
