@@ -1,32 +1,21 @@
-# electron-react-ts
+# electron-recorder-app
 
-An [Electron](https://www.electronjs.org/) boilerplate with hot reloading for [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/).
+The recording program built on electron can record the current screen, and the current screen can capture various video sources for play.
 
-<img width="1440" alt="2021-10-01-134147" src="https://user-images.githubusercontent.com/52094761/135567670-36993d6b-1921-4834-8f0e-925dd51ec165.png">
+<img width="1440" alt="2021-10-01-134147" src="https://buynao.oss-cn-beijing.aliyuncs.com/%E5%B1%8F%E5%B9%95%E5%BD%95%E5%88%B62022-01-16-%E4%B8%8B%E5%8D%884.10.26%20%281%29.gif">
 
-## :green_book: Usage
+## Features
+- Fix the length (duration) of a webm file（and it won't take long to fix）.
+- Supports files larger than 2G, or even larger, and does not take up too much memory.
 
+
+## Usage
 ```sh
-$ git clone https://github.com/sprout2000/electron-react-ts.git
-$ cd electron-react-ts
-$ yarn install && yarn dev
+$ git clone https://github.com/buynao/electron-recorder-app
+$ cd electron-recorder-app
+$ yarn && yarn dev
 ```
 
-## :desktop_computer: Commands:
+### Package (`yarn pack:mac` or `npm run pack:mac`)
 
-### :hammer_and_wrench: Development (`yarn dev` or `npm run dev`)
-
-This command will start up Electron with hot reload enabled in both the main process and the renderer process.
-
-### :arrow_forward: Start (`yarn start` or `npm start`)
-
-This command disables hot reloading and starts up Electron in development mode.
-
-### :package: Package (`yarn package` or `npm run package`)
-
-This command will package your app in production mode.
-You will see that the installer is output to the `release` directory.
-
-## :copyright: License
-
-Copyright (c) 2020 sprout2000 and other contributors
+You can use `yarn pack:win` package the Win App.
