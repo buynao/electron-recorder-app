@@ -6,7 +6,6 @@ import { useGetVideoSizeLit4 } from "./hooks/getVideoSize";
 
 
 export function Mode4(props: LayoutProps) {
-  const { videoPlayState, handleVideoClick } = props;
   const videoSize = useGetVideoSizeLit4();
   return (
       <div className="PotitionCenter video-wrap4" style={{

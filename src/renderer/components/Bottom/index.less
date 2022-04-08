@@ -1,0 +1,43 @@
+.Container-Bottom {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #2B2C31;
+  z-index: 9999;
+  transition: bottom .4s;
+  .Container-Bottom-button {
+    float: left;
+    width: 130px;
+    height: 30px;
+    user-select: none;
+    border: 2px solid #e09740;
+    display: inline-block;
+    background: #2B2C31;
+    color: #e09740;
+    padding: 0px 10px;
+    border-radius: 10px;
+    margin: 22px 10px 0;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    cursor: pointer;
+  }
+  .Container-Bottom-button:hover, .Container-Bottom-button:focus {
+    border-color: #E99D42;
+    background: #E99D42;
+    color: #fff;
+  }
+  // .Container-Bottom-button:active {
+  //   border-color: #E99D42;
+  //   background: #E99D42;
+  //   color: #fff;
+  //   opacity: .5;
+  // }
+}
+.Container-Bottom.is-hide {
+  bottom: -70px;
+}
+.Container-Bottom:hover, .Container-Bottom.is-hide:hover {
+  bottom: 0;
+}

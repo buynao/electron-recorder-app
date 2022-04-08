@@ -31,18 +31,22 @@ function handleWindowEvent(winodw) {
     import_electron.app.quit();
   });
   import_electron.ipcMain.on("window-minimize", () => {
+    console.log("window-minimize");
     winodw.minimize();
   });
   import_electron.ipcMain.on("window-maximize", () => {
+    console.log("window-maximize");
     winodw.setFullScreen(true);
   });
   import_electron.ipcMain.on("window-unmaximize", () => {
+    console.log("window-unmaximize");
     winodw.setFullScreen(false);
   });
 }
 
 // src/main/index.ts
 import_main.default.initialize();
+console.log("init");
 var isDev = process.env.NODE_ENV === "development";
 var execPath = process.platform === "win32" ? "../node_modules/electron/dist/electron.exe" : "../node_modules/.bin/electron";
 if (isDev) {

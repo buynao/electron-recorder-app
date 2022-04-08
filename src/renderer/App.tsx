@@ -1,22 +1,21 @@
 import * as React from "react";
 import { VideoLayout } from "./components/VideoLayout/index"
-import { ModeMenu } from "./components/ModeMenu";
-import { Recorder } from "./components/Recorder";
-import { Volume } from "./components/Volume";
 import { Header } from "./components/Header";
-import { Button } from "antd";
+import { Bottom } from "./components/Bottom";
 
 import "./App.less";
 
-const { useState, useCallback } = React;
+const { useState, useCallback } = React; 
 
 export default function App() {
   const [ showSourceMenu, toggleShowSourceMenu ] = useState(false);
   const [ showModeMenu, toggleShowModeMenu ] = useState(false);
   const [ selectVideo, setSelectVideo ] = useState<HTMLVideoElement | null>(null);
   const [ mode, saveMode ] = useState(1);
+  const [ isHide, toggleMenuToolHide ] = useState(false);
   // 关闭所有弹窗
-  const hideAllModeMenu = useCallback(() => {
+  const hideAllModeMenu = useCallback(async () => {
+      console.log('关闭弹窗');
       toggleShowModeMenu(false);
       toggleShowSourceMenu(false);
       setSelectVideo(null);
@@ -31,30 +30,28 @@ export default function App() {
       toggleShowModeMenu(false);
       toggleShowSourceMenu(false);
   }, []);
+
   return (
-    <div className="Container">
-        <Header />
+    <div className={`Container ${isHide ? 'is-record' : ''}`}>
+        <Header isHide={isHide} />
         <VideoLayout
           mode={mode}
           selectVideo={selectVideo}
           setSelectVideo={setSelectVideo}
           showSourceMenuFun={showSourceMenuFun}
           hideAllModeMenu={hideAllModeMenu}
+          toggleMenuToolHide={toggleMenuToolHide}
           showSourceMenu={showSourceMenu}
         />
-        <div className="cls-Bottom">
-          <Button onClick={() => {
-            toggleShowModeMenu(true);
-            setSelectVideo(null);
-            toggleShowSourceMenu(false);
-          }}>更改布局</Button>
-          <Recorder />
-          <Volume />
-        </div>
-        { showModeMenu ? <ModeMenu
+        <Bottom
           mode={mode}
-          saveMode={saveModeFun}
-        /> : null}
+          isHide={isHide}
+          showModeMenu={showModeMenu}
+          saveModeFun={saveModeFun}
+          setSelectVideo={setSelectVideo}
+          toggleShowSourceMenu={toggleShowSourceMenu}
+          toggleShowModeMenu={toggleShowModeMenu}
+        />
     </div>
   )
 }

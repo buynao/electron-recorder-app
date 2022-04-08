@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
-import { join, resolve } from "path";
+import { resolve } from "path";
 import vitePluginImp from 'vite-plugin-imp';
 import styleImport from 'vite-plugin-style-import';
 const rendererPath = resolve(__dirname, "./src/renderer");
@@ -11,7 +11,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        javascriptEnable: true,
+        javascriptEnabled: true,
+        math: 'always',
         modifyVars: { 
           "@primary-color": '#2B2C31'
         },

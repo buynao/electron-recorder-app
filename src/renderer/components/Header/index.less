@@ -1,4 +1,4 @@
-.header-wrap {
+.Container-Header {
   position: fixed;
   left: 0;
   top: 0;
@@ -8,7 +8,8 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   transition: all .4s;
-  z-index: 99;
+  z-index: 100;
+  cursor: pointer;
   .header-icon {
     float: left;
     height: 50px;
@@ -59,5 +60,14 @@
     height: 50px;
     overflow: hidden;
     -webkit-app-region:drag;
+  }
+  &.is-hide {
+    top: -50px;
+    &:hover {
+      top: 0;
+    }
+  }
+  &:hover {
+    top: 0;
   }
 }

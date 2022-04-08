@@ -6,7 +6,7 @@ import { useRecorder } from "./useRecorder";
 const recorderConst = {
   slice: 0,
   timeSlice: 5 * 1000,
-  mimeType: 'video/webm;codecs=h264',
+  mimeType: 'video/webm;codecs=vp9',
   timer: 0,
   fileBits: [],
   isSaveing: false,
@@ -18,7 +18,7 @@ export function Recorder() {
   return (
     <Button
       type="text"
-      className="recorder-button"
+      className="Container-Bottom-button"
       loading={isSaving}
       onClick={() => {
         if (isSaving) {

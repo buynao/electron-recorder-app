@@ -1,0 +1,42 @@
+.ModeMenuList{
+  position: absolute;
+  width: 170px;
+  left: 8px;
+  bottom: 42px;
+  background-color: #fff;
+  list-style: none;
+  z-index: 10000;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #ccc;
+
+  .menu-item {
+    list-style: none;
+    width: 100%;
+    height: 80px;
+    line-height: 60px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 12px 0;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-weight: 700;
+    font-size: 18px;
+    .mode-img {
+      width: 100px;
+      vertical-align: middle;
+      border-style: none;
+      margin-right: 14px;
+    }
+  }
+  .menu-item:hover {
+    color: #000;
+    background-color: #EED7B8;
+  }
+  .menu-item.select {
+    color: #000;
+    background-color: #EED7B8;
+  }
+}

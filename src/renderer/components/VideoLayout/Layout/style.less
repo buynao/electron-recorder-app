@@ -30,7 +30,7 @@
   .video-flex { 
     display: flex;
     justify-content: start;
-    align-content: space-between;
+    align-content: flex-start;
     flex-wrap: wrap;
   }
   .video2, .video3 {
@@ -82,13 +82,24 @@
   .video1 {
     margin-left: 10px;
   }
-  .video-flex {
+  .video-flex-left {
     float: left;
     display: flex;
     justify-content: start;
     align-content: space-between;
     flex-wrap: wrap;
     margin-left: 10px;
+  }
+  .video-flex-right {
+    float: left;
+    display: flex;
+    justify-content: start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    margin-left: 10px;
+    .video3 {
+      margin-top: 10px;
+    }
   }
 }
 

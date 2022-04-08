@@ -85,7 +85,7 @@ function VideoComp(props: VideoProps) {
               width: style.width - 2,
               height: style.height - 2,
               lineHeight: `${style?.height || 0}px`
-            }} className="video-mode-index">{index}</p> : null }
+            }} className="video-mode-index"></p> : null }
             
             <video
               className={`videoPlayer ${isPlayVideo ? "playing" : 'notPlaying'}`}

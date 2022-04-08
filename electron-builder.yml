@@ -4,10 +4,14 @@ copyright: Copyright © 2022 fulong
 asar: false
 directories:
   output: dist
+win: {
+  icon: ./assets/favicon.ico
+}
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
 mac:
+  icon: ./assets/play.icns
   hardenedRuntime: true
   extendInfo:
     NSMicrophoneUsageDescription: 请允许本程序访问您的麦克风

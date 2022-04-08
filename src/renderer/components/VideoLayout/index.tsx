@@ -4,8 +4,14 @@ import { LayoutMode } from "./Layout";
 import { Devices } from "./VideoSourceList";
 import { useGetVideoPlayerState, VideoStateProps } from './hooks/useGetVideoPlayerState';
 import { useDragEvent } from './hooks/useDragEvent';
-const { useEffect, useState, useCallback } = React;
+import { useToolsShowEvent } from './hooks/useToolsShowEvent';
+import { getImage } from '../../util/help';
 import "./style.less";
+const Remote = require('@electron/remote');
+
+const { useEffect, useState, useCallback } = React;
+
+
 
 interface VideoLayoutProps {
   mode: number;
@@ -14,11 +20,13 @@ interface VideoLayoutProps {
   hideAllModeMenu: () => void;
   selectVideo: HTMLVideoElement | null;
   setSelectVideo: (video: HTMLVideoElement | null) => void;
+  toggleMenuToolHide: (bol: boolean) => void;
 }
 
 export function VideoLayout(props: VideoLayoutProps) {
-  const { mode, showSourceMenu, showSourceMenuFun, hideAllModeMenu , setSelectVideo, selectVideo } = props;
+  const { mode, showSourceMenu, selectVideo, showSourceMenuFun, hideAllModeMenu , setSelectVideo, toggleMenuToolHide } = props;
   const [ sourceMenuPosition, saveSourceMenuPosition ] = useState({});
+  const [ bgImg, setBgImg ] = useState('');
   const [ curVideo, saveCurVideo ] = useState<HTMLVideoElement>();
   const [ devices, updateDevices ] = useState<Devices>({} as Devices);
   const [ videoPlayState, updateVideoPlayStates ] = useGetVideoPlayerState<VideoStateProps>(mode);
@@ -61,8 +69,8 @@ export function VideoLayout(props: VideoLayoutProps) {
       return videoState
     });
     updateVideoPlayStates(newStates);
+    hideAllModeMenu();
   }, [videoPlayState]);
-
   // video点击事件
   const handleVideoClick = useCallback((e, index: number) => {
       saveCurVideo(e.target);
@@ -75,15 +83,36 @@ export function VideoLayout(props: VideoLayoutProps) {
         top
       });
   }, []);
-
   // video点击事件
   const handleVideoWrapClick = useCallback((e: any, videoWrap: HTMLVideoElement | null) => {
     setSelectVideo(videoWrap);
     e.stopPropagation();
   }, []);
-  // 获取当前布局界面
+  // 切换背景 & 隐藏弹窗
+  const handleLayoutClick = useCallback(async (e: React.MouseEvent<HTMLDivElement>, contextPop?: boolean) => {
+    if (contextPop || (e.target as HTMLDivElement).className.includes('Container-layout')) {
+      const img = await getImage() as string;
+      setBgImg(img)
+      hideAllModeMenu();
+    }
+  }, []);
+  const menuPop = useToolsShowEvent(toggleMenuToolHide, handleLayoutClick);
+
   return (
-    <div className="Video-layout" onClick={hideAllModeMenu}>
+    <div className="Container-layout"
+      style={{
+        position: 'relative',
+        backgroundImage: bgImg ? `url(${bgImg})` : ''
+      }}
+      onContextMenu={(ev) => {
+        // 弹出上下文菜单
+        menuPop();
+        // 阻止默认行为
+        ev.preventDefault();
+      }}
+      onClick={hideAllModeMenu}
+      onDoubleClick={handleLayoutClick}
+    >
         <LayoutMode
             mode={mode}
             selectVideo={selectVideo}

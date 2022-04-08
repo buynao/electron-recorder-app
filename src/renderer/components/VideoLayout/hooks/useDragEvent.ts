@@ -42,6 +42,10 @@ export const useDragEvent  = (
         const dragIndex = draggedRef.current.index;
         if(enterIndex && enterIndex !== dragIndex) {
             $videoWrap.style.borderColor = 'red';
+            console.log(`---------enter S------------`)
+            console.log(`enterIndex:${enterIndex}`);
+            console.log(`dragIndex:${dragIndex}`);
+            console.log(`---------enter E------------`);
         }
     };
     dragEventRef.current.leave = (e: any) => {
@@ -52,6 +56,10 @@ export const useDragEvent  = (
       if(enterIndex && enterIndex !== dragIndex) {
 
           $videoWrap.style.borderColor = 'transparent';
+          console.log(`---------leave S------------`)
+          console.log(`enterIndex:${enterIndex}`);
+          console.log(`dragIndex:${dragIndex}`);
+          console.log(`---------leave E------------`)
       }
     };
     dragEventRef.current.drop = (e: any) => {

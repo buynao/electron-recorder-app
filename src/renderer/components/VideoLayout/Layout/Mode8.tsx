@@ -33,6 +33,12 @@ export function Mode8(props: LayoutProps) {
             cls="video video4"
             {...props}
           />
+          <Video
+            index={5}
+            style={videoSize.lit}
+            cls="video video4"
+            {...props}
+          />
         </div>
         <Video
           index={1}
@@ -45,15 +51,9 @@ export function Mode8(props: LayoutProps) {
           height: videoSize.normal.height,
         }}>
           <Video
-            index={5}
-            style={videoSize.lit}
-            cls="video video2"
-            {...props}
-          />
-          <Video
             index={6}
             style={videoSize.lit}
-            cls="video video3"
+            cls="video video2"
             {...props}
           />
           <Video
@@ -64,6 +64,12 @@ export function Mode8(props: LayoutProps) {
           />
           <Video
             index={8}
+            style={videoSize.lit}
+            cls="video video3"
+            {...props}
+          />
+          <Video
+            index={9}
             style={videoSize.lit}
             cls="video video3"
             {...props}

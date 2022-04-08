@@ -7,7 +7,7 @@ import { pathToFileURL } from "url";
 import { handleWindowEvent } from './ipc/windowContrl';
 
 remoteMain.initialize();
-
+console.log('init')
 const isDev = process.env.NODE_ENV === 'development';
 
 /// #if DEBUG

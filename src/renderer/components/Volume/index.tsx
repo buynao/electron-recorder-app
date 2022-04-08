@@ -1,6 +1,7 @@
 
 import * as React from "react";
 import mirIcon from "./images/mir.png";
+import muteIcon from "./images/mute.png";
 import "./index.less";
 
 const loudness = require('loudness');
@@ -16,6 +17,7 @@ export function Volume() {
   const jdtRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const processRef = useRef<HTMLDivElement>(null);
+  const [ isMute, setMute ] = useState(false);
   const [ vol, setVol ] = useState(0);
   const moveEvent = useRef<any>({
     start: () => {},
@@ -23,24 +25,42 @@ export function Volume() {
     up: () => {}
   });
   const isMove = useRef(false);
+  const volPreRef = useRef<number>(0);
 
   useEffect(() => {
     async function getVolume() {
       //  获取当前音量
       const vol = await loudness.getVolume();
-      setVol(vol);
+      setVolumeState(vol);
     }
     getVolume();
-  }, [])
+  }, []);
+
+  const setVolumeState = async (vol: number, async: boolean = true) => {
+    // 系统音量
+    loudness.setVolume(vol);
+    // 进度条设置
+    setVol(vol);
+
+    if (async) {
+      // 缓存当前音量值
+      volPreRef.current = vol;
+    }
+    // 设置静音图标
+    if (+vol === 0) {
+      setMute(true);
+    } else {
+      setMute(false);
+    }
+  }
 
   useEffect(() => {
     moveEvent.current.start = async (e: any) => {
       // 直接设置音量
       if (e.target === processRef.current || e.target === jdtRef.current) {
         const rect = e.target.getBoundingClientRect();
-        const x = e.pageX - rect.left;
-        setVol(x);
-        await loudness.setVolume(x);
+        const vol = e.pageX - rect.left;
+        setVolumeState(vol)
       }
       // 拖动设置音量
       if (e.target === dotRef.current) {
@@ -65,8 +85,7 @@ export function Volume() {
         curVol = curVol > 100 ? 100 : curVol;
         curVol = curVol < 0 ? 0 : curVol;
         jdtRef.current.style.width = `${curVol}%`;
-        setVol(curVol);
-        await loudness.setVolume(curVol);
+        setVolumeState(curVol)
       }
     }
     document.addEventListener('mousedown', moveEvent.current.start)
@@ -80,10 +99,15 @@ export function Volume() {
       document.removeEventListener('mousemove', moveEvent.current.move)
       document.removeEventListener('mouseup', moveEvent.current.up)
     }
-  }, [vol])
+  }, [vol]);
   return (
       <div className="volume-wrap">
-          <img src={mirIcon} alt="mirIcon" />
+          <img
+            className="volume-icon"
+            src={isMute ? muteIcon : mirIcon}
+            onClick={async () => setVolumeState(isMute ? volPreRef.current : 0, false)}
+            alt="mirIcon"
+          />
           <div ref={processRef} className="volume-process">
               <div ref={jdtRef} className="volume-jdt" style={{
                 width: `${vol}%`

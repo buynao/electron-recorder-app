@@ -11,7 +11,7 @@ export function Mode6(props: LayoutProps) {
       <div className="PotitionCenter video-wrap6" style={{
         width: videoSize.wrapWidth
       }}>
-        <div className="video-flex" style={{
+        <div className="video-flex-left" style={{
           width: videoSize.lit.width,
           height: videoSize.normal.height,
         }}>
@@ -40,7 +40,7 @@ export function Mode6(props: LayoutProps) {
           cls="video video1"
           {...props}
         />
-       <div className="video-flex" style={{
+       <div className="video-flex-right" style={{
           width: videoSize.lit.width,
           height: videoSize.normal.height,
         }}>

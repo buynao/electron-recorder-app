@@ -1,6 +1,8 @@
 import { VIDEO_WIDTH_MAP, VIDEO_SIZE_LIT4, VIDEO_SCALE, VIDEO_SIZE_5, VIDEO_SIZE_LIT8, VIDEO_SIZE_8 } from "./constant";
 const Remote = require('@electron/remote');
 
+const fs = require('fs');
+
 export const getLit4VideoSize = (innerWidth: number) => {
   return {
     style: {
@@ -77,3 +79,43 @@ export const getVideoPath = () => {
     });
   })
 }
+
+/*
+* 获取图片地址
+*/
+export const getImage = () => {
+  return new Promise((resolve) => {
+    Remote.dialog.showOpenDialog({
+      title: '选择背景图片',
+      filters: [
+        {
+          name: 'img',
+          extensions: ['jpg', 'png'] // 只允许 jpg 和 png 格式的文件
+        }
+      ],
+      buttonLabel: '选择图片'
+    }).then((filePath: any) => {
+      if (!filePath.filePaths[0]) {
+        return;
+      }
+      fs.exists(filePath.filePaths[0], (exists: any) => {
+        console.log(exists ? "文件存在" : "文件不存在");
+        console.log(exists);
+        if (exists) {
+          //读取本地的json文件
+          // let result = JSON.parse(fs.readFileSync(newFile_path));
+          let result = fs.readFileSync(filePath.filePaths[0]);
+          resolve(transformArrayBufferToBase64(result))
+        }
+      })
+    });
+  })
+}
+function transformArrayBufferToBase64 (buffer: any) {            
+  var binary = '';            
+  var bytes = new Uint8Array(buffer);            
+  for (var len = bytes.byteLength, i = 0; i < len; i++) {                
+      binary += String.fromCharCode(bytes[i]);            
+  }            
+  return "data:image/png;base64," + window.btoa(binary);        
+}   

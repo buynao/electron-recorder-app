@@ -22,8 +22,9 @@ export type Opt = {
   width?: number;
   height?: number;
 }
-
-
+// 计时器
+let toastTimer = null;
+// 将视频文件写入本地
 export const writeVideoInPath = async (fixBlob: Blob, videoPath: string) => {
   return new Promise(async (resolve) => {
     try {
@@ -34,6 +35,7 @@ export const writeVideoInPath = async (fixBlob: Blob, videoPath: string) => {
       while (true) {
         let { done, value } = await reader.read();
         if (done) {
+          console.log('write done.');
           fileStream.close();
           resolve(true);
           break;
@@ -78,26 +80,26 @@ const genMediaStreamConstraints = (sourceId: string) => {
   };
   return constraints as MediaStreamConstraints;
 }
-// 混音
-const mergeAudioStreams = (desktopStream: MediaStream, voiceStream: MediaStream) => {
-  const context = new AudioContext();
-  const destination = context.createMediaStreamDestination();
-  const hasDesktop = false;
-  const hasVoice = false;
-  if (desktopStream && desktopStream.getAudioTracks().length > 0) {
-    const source1 = context.createMediaStreamSource(desktopStream);
-    const desktopGain = context.createGain();
-    desktopGain.gain.value = 0.7;
-    source1.connect(desktopGain).connect(destination);
-  }
-  if (voiceStream && voiceStream.getAudioTracks().length > 0) {
-    const source2 = context.createMediaStreamSource(voiceStream);
-    const voiceGain = context.createGain();
-    voiceGain.gain.value = 0.7;
-    source2.connect(voiceGain).connect(destination);
-  }
-  return (hasDesktop || hasVoice) ? destination.stream.getAudioTracks() : [];
-};
+// // 混音
+// const mergeAudioStreams = (desktopStream: MediaStream, voiceStream: MediaStream) => {
+//   const context = new AudioContext();
+//   const destination = context.createMediaStreamDestination();
+//   const hasDesktop = false;
+//   const hasVoice = false;
+//   if (desktopStream && desktopStream.getAudioTracks().length > 0) {
+//     const source1 = context.createMediaStreamSource(desktopStream);
+//     const desktopGain = context.createGain();
+//     desktopGain.gain.value = 0.7;
+//     source1.connect(desktopGain).connect(destination);
+//   }
+//   if (voiceStream && voiceStream.getAudioTracks().length > 0) {
+//     const source2 = context.createMediaStreamSource(voiceStream);
+//     const voiceGain = context.createGain();
+//     voiceGain.gain.value = 0.7;
+//     source2.connect(voiceGain).connect(destination);
+//   }
+//   return (hasDesktop || hasVoice) ? destination.stream.getAudioTracks() : [];
+// };
 export const useRecorder = (recorderConst: RecorderConst) => {
   const rcConstRef = useRef(recorderConst);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -141,6 +143,7 @@ export const useRecorder = (recorderConst: RecorderConst) => {
   };
   // 销毁录像控制器，清空录制流
   const recorderDestory = () => {
+    console.log('recorderDestory')
     if (videoStreamRef.current) {
       const tracks = videoStreamRef.current.getTracks();
       tracks.forEach((track: any) => {
@@ -162,27 +165,35 @@ export const useRecorder = (recorderConst: RecorderConst) => {
       recorderRef.current = null;
     }
     rcConstRef.current.fileBits = [];
+    // 重置按钮保存状态
     toggleSavingState(false);
   };
   // 录像控制器停止时触发
   const recorderStop = async () => {
     const videoPath = await getVideoPath() as string;
-    message.info('视频保存中,请稍等!');
+    if (!videoPath) {
+      toggleSavingState(false);
+      return;
+    };
+    toastTimer = setTimeout(() => {
+      message.info('视频保存中,请稍等!');
+    }, 100);
     try {
-      let fixBlob = await fixWebmDuration(new Blob(rcConstRef.current.fileBits));
+      const fixBlob = await fixWebmDuration(new Blob(rcConstRef.current.fileBits));
       const result = await writeVideoInPath(fixBlob, videoPath);
-      // const result = await writeVideoInPath(
-      //   new Blob(rcConstRef.current.fileBits),
-      //   videoPath
-      // );
       if (result) {
+        if (toastTimer) {
+          clearTimeout(toastTimer);
+        }
         message.success('视频保存成功!');
         recorderDestory();
+        toggleSavingState(false);
       }
     } catch (error: any) {
       message.error(`视频保存失败:${error.message}`);
       // message.error(error);
       recorderDestory();
+      toggleSavingState(false);
     }
   };
   // 初始化传输/停止事件
@@ -196,7 +207,7 @@ export const useRecorder = (recorderConst: RecorderConst) => {
     }
   };
   // 
-  const recorderLooper = async () => {
+  const strartRecorderAndInitEvent = async () => {
     // 构建录像控制器并开始录像
     await genRecorderAndStartRecorder();
     // 初始化录像控制器相关事件
@@ -204,6 +215,10 @@ export const useRecorder = (recorderConst: RecorderConst) => {
   };
   const handleRecorderClcik = async (medOpts: Opt) => {
     if (isRecording) {
+      // 设置保存中状态
+      toggleSavingState(true);
+      toggleRecordingState(false);
+      // 停止录制功能
       recorderEnd();
     } else {
       try {
@@ -219,14 +234,12 @@ export const useRecorder = (recorderConst: RecorderConst) => {
           toggleRecordingState(false);
         }
       } catch(error: any) {
-        message.error(`handleRecorderClcik:${error.message}`);
+        message.error(`handleRecorderClcik:${error.message}`)
+        console.log(error)
       }
     }
   };
   const recorderEnd = async () => {
-    // 设置保存中状态
-    toggleSavingState(true);
-    toggleRecordingState(false);
     if (recorderRef.current) {
       recorderRef.current.stop();
     }
@@ -236,13 +249,13 @@ export const useRecorder = (recorderConst: RecorderConst) => {
   };
   // 开始重新录制
   useEffect(() => {
-    async function startLooper() {
-      await recorderLooper();
+    async function startRecorder() {
+      await strartRecorderAndInitEvent();
     }
-    if (isRecording && !isSaving) {
-      startLooper();
+    if (isRecording) {
+      startRecorder();
     }
-  }, [isRecording, isSaving]);
+  }, [isRecording]);
 
   return {
     isRecording,
