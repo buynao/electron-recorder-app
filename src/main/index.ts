@@ -1,8 +1,7 @@
-import path from 'path';
 import {  BrowserWindow, app } from 'electron';
 // import { searchDevtools } from 'electron-search-devtools';
 import remoteMain from '@electron/remote/main';
-import { join } from "path";
+import { join, resolve } from "path";
 import { pathToFileURL } from "url";
 import { handleWindowEvent } from './ipc/windowContrl';
 
@@ -19,7 +18,7 @@ const execPath =
 if (isDev) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('electron-reload')(__dirname, {
-    electron: path.resolve(__dirname, execPath),
+    electron: resolve(__dirname, execPath),
     forceHardReset: true,
     hardResetMethod: 'exit',
   });
